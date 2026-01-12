@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:uho/router/app_router.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  MainApp({super.key});
+
+  final appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello UHO!'),
-        ),
-      ),
+    return MaterialApp.router(
+      routerConfig: appRouter.config(),
     );
   }
 }
