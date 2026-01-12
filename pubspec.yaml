@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   auto_route: ^11.1.0
+  provider: ^6.1.5+1
+  supabase_flutter: ^2.12.0
 
 dev_dependencies:
   flutter_test:
