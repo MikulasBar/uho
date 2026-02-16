@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:uho/widgets/header/header.dart';
 
 @RoutePage()
 class DishesScreen extends StatelessWidget {
@@ -7,6 +8,9 @@ class DishesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Hello UHO!')));
+    return Scaffold(
+      appBar: UhoHeader.preferredSize(title: "Dishes"),
+      body: Center(child: Text('Hello UHO!')),
+    );
   }
 }
