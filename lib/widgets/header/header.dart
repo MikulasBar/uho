@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uho/core/theme.dart';
+import 'package:uho/core/constants.dart';
 
 class UhoHeader extends StatelessWidget {
   final String title;

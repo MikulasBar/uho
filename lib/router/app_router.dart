@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:uho/screens/dishes_screen/dishes_screen.dart';
+import 'package:uho/screens/canteens_screen/canteens_screen.dart';
+import 'package:uho/screens/groups_screen/groups_screen.dart';
+import 'package:uho/screens/friends_screen/friends_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -9,5 +12,8 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: DishesRoute.page, initial: true),
+    AutoRoute(page: CanteensRoute.page),
+    AutoRoute(page: GroupsRoute.page),
+    AutoRoute(page: FriendsRoute.page),
   ];
 }
