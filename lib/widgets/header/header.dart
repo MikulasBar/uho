@@ -32,9 +32,15 @@ class UhoHeader extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Center(
-              child: Text(
-                title,
-                style: TextStyle(fontSize: UhoFontSize.big),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 250), // optional max width
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: UhoFontSize.big),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             if (onBack != null)
