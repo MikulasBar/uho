@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:uho/widgets/bottom_bar/bottom_bar.dart';
+import 'package:uho/widgets/header/header.dart';
 
 @RoutePage()
 class GroupsScreen extends StatelessWidget {
@@ -8,8 +9,9 @@ class GroupsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Text("Groups screen"),
+    return Scaffold(
+      appBar: UhoHeader.preferredSize(title: "Skupiny"),
+      body: Text("TODO"),
       bottomNavigationBar: UhoBottomBar(),
     );
   }

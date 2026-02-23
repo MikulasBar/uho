@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uho/core/constants.dart';
+import 'package:uho/providers/auth_provider.dart';
 import 'package:uho/providers/settings_provider.dart';
 import 'package:uho/router/app_router.dart';
 
@@ -25,7 +26,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SettingsProvider())
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider(),),
       ],
       child: MaterialApp.router(
         routerConfig: appRouter.config(),
