@@ -51,14 +51,36 @@ class SettingsScreen extends StatelessWidget {
           if (!auth.isLoggedIn)
             ElevatedButton(
               onPressed: () => auth.signInWithGoogle(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: UhoColor.card, // button background
+                foregroundColor: Colors.white,   // text color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(UhoCornerRadius.medium),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: UhoPadding.medium,
+                  horizontal: UhoPadding.big,
+                ),
+              ),
               child: const Text("Sign in with Google"),
             ),
 
-          if (auth.isLoggedIn)
-            ElevatedButton(
-              onPressed: () => auth.signOut(),
-              child: const Text("Logout"),
+        if (auth.isLoggedIn)
+          ElevatedButton(
+            onPressed: () => auth.signOut(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: UhoColor.card,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(UhoCornerRadius.medium),
+              ),
+              padding: const EdgeInsets.symmetric(
+                vertical: UhoPadding.medium,
+                horizontal: UhoPadding.big,
+              ),
             ),
+            child: const Text("Logout"),
+          ),
         ],
       ),
       bottomNavigationBar: UhoBottomBar(),

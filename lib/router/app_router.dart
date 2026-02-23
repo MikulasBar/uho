@@ -8,7 +8,7 @@ import 'package:uho/screens/groups_screen/groups_screen.dart';
 import 'package:uho/screens/friends_screen/friends_screen.dart';
 import 'package:uho/screens/dish_ratings_screen/dish_ratings_screen.dart';
 import 'package:uho/screens/settings_screen/settings_screen.dart';
-
+import 'package:uho/screens/new_dish_rating_screen/new_dish_rating_screen.dart';
 
 part 'app_router.gr.dart';
 
@@ -23,5 +23,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: FriendsRoute.page),
     AutoRoute(page: DishRatingsRoute.page),
     AutoRoute(page: SettingsRoute.page),
+    AutoRoute(page: NewDishRatingRoute.page),
   ];
 }

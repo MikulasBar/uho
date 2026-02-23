@@ -122,6 +122,53 @@ class GroupsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [NewDishRatingScreen]
+class NewDishRatingRoute extends PageRouteInfo<NewDishRatingRouteArgs> {
+  NewDishRatingRoute({
+    Key? key,
+    required Dish dish,
+    List<PageRouteInfo>? children,
+  }) : super(
+         NewDishRatingRoute.name,
+         args: NewDishRatingRouteArgs(key: key, dish: dish),
+         initialChildren: children,
+       );
+
+  static const String name = 'NewDishRatingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<NewDishRatingRouteArgs>();
+      return NewDishRatingScreen(key: args.key, dish: args.dish);
+    },
+  );
+}
+
+class NewDishRatingRouteArgs {
+  const NewDishRatingRouteArgs({this.key, required this.dish});
+
+  final Key? key;
+
+  final Dish dish;
+
+  @override
+  String toString() {
+    return 'NewDishRatingRouteArgs{key: $key, dish: $dish}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! NewDishRatingRouteArgs) return false;
+    return key == other.key && dish == other.dish;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ dish.hashCode;
+}
+
+/// generated route for
 /// [SettingsScreen]
 class SettingsRoute extends PageRouteInfo<void> {
   const SettingsRoute({List<PageRouteInfo>? children})

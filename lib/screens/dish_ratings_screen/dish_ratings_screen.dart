@@ -5,6 +5,7 @@ import 'package:uho/core/constants.dart';
 import 'package:uho/core/db_client.dart';
 import 'package:uho/models/dish.dart';
 import 'package:uho/models/dish_rating.dart';
+import 'package:uho/router/app_router.dart';
 import 'package:uho/widgets/bottom_bar/bottom_bar.dart';
 import 'package:uho/widgets/dish_rating_card/dish_rating_card.dart';
 import 'package:uho/widgets/header/header.dart';
@@ -41,6 +42,15 @@ class DishRatingsScreen extends StatelessWidget {
           }
         },
       ),
+      floatingActionButton: FloatingActionButton(
+      onPressed: () {
+        context.router.push(
+          NewDishRatingRoute(dish: dish), // your route to new screen
+        );
+      },
+      backgroundColor: UhoColor.card,
+      child: const Icon(Icons.add, color: UhoColor.highlight),
+    ),
       bottomNavigationBar: UhoBottomBar(),
     );
   }
