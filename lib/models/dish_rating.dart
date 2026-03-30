@@ -7,6 +7,7 @@ class DishRating {
   double tasteRating;
   double portionSizeRating;
   String description;
+  bool isPublic;
 
   int? userRatingCount;
 
@@ -16,7 +17,10 @@ class DishRating {
     this.tasteRating,
     this.portionSizeRating,
     this.description,
-    { this.userRatingCount } 
+    {
+      this.userRatingCount,
+      this.isPublic = true,
+    }
   );
 
   factory DishRating.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,7 @@ class DishRating {
       toDouble(json['portion_size_rating'])!,
       json['description'] as String,
       userRatingCount: toInt(json['user_rating_count']),
+      isPublic: (json['is_public'] as bool?) ?? true,
     );
   }
 }

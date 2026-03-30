@@ -67,6 +67,7 @@ class DbClient {
           'taste_rating': json['taste_rating'],
           'portion_size_rating': json['portion_size_rating'],
           'description': json['description'] ?? '',
+          'is_public': json['is_public'] ?? true,
         });
         return rating;
       }).toList();
@@ -84,24 +85,111 @@ class DbClient {
     required double tasteRating,
     required double portionSizeRating,
     required String description,
+    bool isPublic = true,
+    List<String> groupIds = const [],
   }) async {
+    String? createdRatingId;
+
     try {
       final user = Supabase.instance.client.auth.currentUser;
       if (user == null) {
         throw Exception("User not logged in");
       }
 
-      await Supabase.instance.client.from('dish_ratings').insert({
-        'dish_id': dishId,
-        'user_id': user.id,
-        'overall_rating': overallRating,
-        'taste_rating': tasteRating,
-        'portion_size_rating': portionSizeRating,
-        'description': description,
-      });
+      final ratingResponse = await Supabase.instance.client
+          .from('dish_ratings')
+          .insert({
+            'dish_id': dishId,
+            'user_id': user.id,
+            'overall_rating': overallRating,
+            'taste_rating': tasteRating,
+            'portion_size_rating': portionSizeRating,
+            'description': description,
+            'is_public': isPublic,
+          })
+          .select('id');
+
+      if ((ratingResponse as List).isEmpty) {
+        throw Exception("Dish rating insert returned no row");
+      }
+
+      createdRatingId = ratingResponse.first['id'] as String;
+
+      final uniqueGroupIds = groupIds.toSet().toList();
+      if (uniqueGroupIds.isNotEmpty) {
+        final relations = uniqueGroupIds
+            .map(
+              (groupId) => {
+                'group_id': groupId,
+                'dish_rating_id': createdRatingId,
+              },
+            )
+            .toList();
+
+        await Supabase.instance.client
+            .from('dish_rating_group_relations')
+            .insert(relations);
+      }
     } catch (e) {
+      if (createdRatingId != null) {
+        try {
+          await Supabase.instance.client
+              .from('dish_ratings')
+              .delete()
+              .eq('id', createdRatingId);
+        } catch (rollbackError) {
+          print("Error rolling back dish rating insert: $rollbackError");
+        }
+      }
+
       print("Error inserting dish rating: $e");
       rethrow;
+    }
+  }
+
+  static Future<List<Group>> fetchCurrentUserGroups() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) {
+        return [];
+      }
+
+      final ownerGroupsResult = await Supabase.instance.client
+          .from('groups')
+          .select('id, name, member_count, dish_ratings_count, owner_id')
+          .eq('owner_id', user.id);
+
+      final membershipsResult = await Supabase.instance.client
+          .from('group_memberships')
+          .select('group_id')
+          .eq('member_id', user.id);
+
+      final memberGroupIds = (membershipsResult as List)
+          .map((row) => row['group_id'] as String)
+          .toSet()
+          .toList();
+
+      final memberGroupsResult = memberGroupIds.isEmpty
+          ? <dynamic>[]
+          : await Supabase.instance.client
+                .from('groups')
+                .select('id, name, member_count, dish_ratings_count, owner_id')
+                .inFilter('id', memberGroupIds);
+
+      final merged = [...(ownerGroupsResult as List), ...memberGroupsResult];
+      final byId = <String, Group>{};
+      for (final json in merged) {
+        final group = Group.fromJson(json);
+        byId[group.id] = group;
+      }
+
+      final groups = byId.values.toList()
+        ..sort((a, b) => a.name.compareTo(b.name));
+
+      return groups;
+    } catch (e) {
+      print("Error fetching current user groups: $e");
+      return [];
     }
   }
 

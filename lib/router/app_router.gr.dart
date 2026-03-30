@@ -370,6 +370,76 @@ class NewGroupRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [RatingVisibilityScreen]
+class RatingVisibilityRoute extends PageRouteInfo<RatingVisibilityRouteArgs> {
+  RatingVisibilityRoute({
+    Key? key,
+    required bool initialIsPublic,
+    required List<String> initialGroupIds,
+    List<PageRouteInfo>? children,
+  }) : super(
+         RatingVisibilityRoute.name,
+         args: RatingVisibilityRouteArgs(
+           key: key,
+           initialIsPublic: initialIsPublic,
+           initialGroupIds: initialGroupIds,
+         ),
+         initialChildren: children,
+       );
+
+  static const String name = 'RatingVisibilityRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<RatingVisibilityRouteArgs>();
+      return RatingVisibilityScreen(
+        key: args.key,
+        initialIsPublic: args.initialIsPublic,
+        initialGroupIds: args.initialGroupIds,
+      );
+    },
+  );
+}
+
+class RatingVisibilityRouteArgs {
+  const RatingVisibilityRouteArgs({
+    this.key,
+    required this.initialIsPublic,
+    required this.initialGroupIds,
+  });
+
+  final Key? key;
+
+  final bool initialIsPublic;
+
+  final List<String> initialGroupIds;
+
+  @override
+  String toString() {
+    return 'RatingVisibilityRouteArgs{key: $key, initialIsPublic: $initialIsPublic, initialGroupIds: $initialGroupIds}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! RatingVisibilityRouteArgs) return false;
+    return key == other.key &&
+        initialIsPublic == other.initialIsPublic &&
+        const ListEquality<String>().equals(
+          initialGroupIds,
+          other.initialGroupIds,
+        );
+  }
+
+  @override
+  int get hashCode =>
+      key.hashCode ^
+      initialIsPublic.hashCode ^
+      const ListEquality<String>().hash(initialGroupIds);
+}
+
+/// generated route for
 /// [SettingsScreen]
 class SettingsRoute extends PageRouteInfo<void> {
   const SettingsRoute({List<PageRouteInfo>? children})

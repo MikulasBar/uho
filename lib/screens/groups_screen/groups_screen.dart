@@ -41,7 +41,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
     return Scaffold(
       appBar: UhoHeader.preferredSize(
         title: "Skupiny",
-        onBack: () => context.router.maybePop(),
       ),
       body: RefreshIndicator(
         onRefresh: _refreshGroups,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:uho/models/dish.dart';
 import 'package:uho/models/group.dart';
+import 'package:collection/collection.dart';
 
 import 'package:uho/screens/dishes_screen/dishes_screen.dart';
 import 'package:uho/screens/canteens_screen/canteens_screen.dart';
@@ -13,6 +14,7 @@ import 'package:uho/screens/group_dish_ratings_screen/group_dish_ratings_screen.
 import 'package:uho/screens/new_group_screen/new_group_screen.dart';
 import 'package:uho/screens/friends_screen/friends_screen.dart';
 import 'package:uho/screens/dish_ratings_screen/dish_ratings_screen.dart';
+import 'package:uho/screens/rating_visibility_screen/rating_visibility_screen.dart';
 import 'package:uho/screens/settings_screen/settings_screen.dart';
 import 'package:uho/screens/new_dish_rating_screen/new_dish_rating_screen.dart';
 
@@ -33,6 +35,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: NewGroupRoute.page),
     AutoRoute(page: FriendsRoute.page),
     AutoRoute(page: DishRatingsRoute.page),
+    AutoRoute(page: RatingVisibilityRoute.page),
     AutoRoute(page: SettingsRoute.page),
     AutoRoute(page: NewDishRatingRoute.page),
   ];

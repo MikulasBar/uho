@@ -5,6 +5,7 @@ import 'package:uho/core/constants.dart';
 import 'package:uho/core/db_client.dart';
 import 'package:uho/core/utilities.dart';
 import 'package:uho/models/dish.dart';
+import 'package:uho/router/app_router.dart';
 import 'package:uho/widgets/header/header.dart';
 
 @RoutePage()
@@ -22,6 +23,25 @@ class _NewDishRatingScreenState extends State<NewDishRatingScreen> {
   double portion = 0;
   final TextEditingController descriptionController = TextEditingController();
   bool loading = false;
+  bool isPublic = true;
+  Set<String> selectedGroupIds = {};
+
+  Future<void> _openVisibilitySettings() async {
+    final result = await context.router.push(
+      RatingVisibilityRoute(
+        initialIsPublic: isPublic,
+        initialGroupIds: selectedGroupIds.toList(),
+      ),
+    );
+
+    if (result is Map<String, dynamic>) {
+      setState(() {
+        isPublic = (result['isPublic'] as bool?) ?? isPublic;
+        final groups = result['groupIds'] as List<dynamic>? ?? const [];
+        selectedGroupIds = groups.map((id) => id.toString()).toSet();
+      });
+    }
+  }
 
   void _publishRating() async {
     setState(() => loading = true);
@@ -33,6 +53,8 @@ class _NewDishRatingScreenState extends State<NewDishRatingScreen> {
         tasteRating: taste,
         portionSizeRating: portion,
         description: descriptionController.text,
+        isPublic: isPublic,
+        groupIds: selectedGroupIds.toList(),
       );
       context.router.pop(true); // return to previous screen
     } catch (e) {
@@ -100,6 +122,21 @@ class _NewDishRatingScreenState extends State<NewDishRatingScreen> {
           ),
           const SizedBox(height: UhoPadding.medium),
           ElevatedButton(
+            onPressed: loading ? null : _openVisibilitySettings,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: UhoColor.card,
+              foregroundColor: UhoColor.text1,
+              padding: const EdgeInsets.symmetric(vertical: UhoPadding.medium),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(UhoCornerRadius.medium),
+              ),
+            ),
+            child: Text(
+              'Viditelnost: ${isPublic ? 'Veřejné' : 'Soukromé'} • Skupiny: ${selectedGroupIds.length}',
+            ),
+          ),
+          const SizedBox(height: UhoPadding.medium),
+          ElevatedButton(
             onPressed: loading ? null : _publishRating,
             style: ElevatedButton.styleFrom(
               backgroundColor: UhoColor.highlight,
@@ -111,7 +148,7 @@ class _NewDishRatingScreenState extends State<NewDishRatingScreen> {
             ),
             child: loading
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text("Publish Rating"),
+                : const Text("Publikovat hodnocení"),
           ),
         ],
       ),

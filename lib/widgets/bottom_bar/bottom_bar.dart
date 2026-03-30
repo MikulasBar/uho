@@ -51,12 +51,12 @@ class UhoBottomBar extends StatelessWidget {
                 isActive: currentRoute == DishesRoute.name,
                 onTap: () => router.replaceAll([const DishesRoute()]),
               ),
-              _item(
-                context,
-                icon: Icons.restaurant,
-                isActive: currentRoute == CanteensRoute.name,
-                onTap: () => router.replaceAll([const CanteensRoute()]),
-              ),
+              // _item(
+              //   context,
+              //   icon: Icons.restaurant,
+              //   isActive: currentRoute == CanteensRoute.name,
+              //   onTap: () => router.replaceAll([const CanteensRoute()]),
+              // ),
               _item(
                 context,
                 icon: Icons.groups,
