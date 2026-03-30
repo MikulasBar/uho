@@ -7,6 +7,7 @@ import 'package:uho/core/db_client.dart';
 import 'package:uho/models/group.dart';
 import 'package:uho/models/profile.dart';
 import 'package:uho/providers/auth_provider.dart';
+import 'package:uho/router/app_router.dart';
 import 'package:uho/widgets/header/header.dart';
 
 @RoutePage()
@@ -226,6 +227,21 @@ class _GroupMembersScreenState extends State<GroupMembersScreen> {
           );
         },
       ),
+      floatingActionButton: isOwner
+          ? FloatingActionButton(
+              onPressed: () async {
+                final added = await context.router.push(
+                  GroupAddMembersRoute(group: widget.group),
+                );
+
+                if (added == true && mounted) {
+                  await _refreshMembers();
+                }
+              },
+              backgroundColor: UhoColor.card,
+              child: const Icon(Icons.person_add, color: UhoColor.highlight),
+            )
+          : null,
     );
   }
 }

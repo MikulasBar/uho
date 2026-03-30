@@ -106,6 +106,53 @@ class FriendsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [GroupAddMembersScreen]
+class GroupAddMembersRoute extends PageRouteInfo<GroupAddMembersRouteArgs> {
+  GroupAddMembersRoute({
+    Key? key,
+    required Group group,
+    List<PageRouteInfo>? children,
+  }) : super(
+         GroupAddMembersRoute.name,
+         args: GroupAddMembersRouteArgs(key: key, group: group),
+         initialChildren: children,
+       );
+
+  static const String name = 'GroupAddMembersRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<GroupAddMembersRouteArgs>();
+      return GroupAddMembersScreen(key: args.key, group: args.group);
+    },
+  );
+}
+
+class GroupAddMembersRouteArgs {
+  const GroupAddMembersRouteArgs({this.key, required this.group});
+
+  final Key? key;
+
+  final Group group;
+
+  @override
+  String toString() {
+    return 'GroupAddMembersRouteArgs{key: $key, group: $group}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! GroupAddMembersRouteArgs) return false;
+    return key == other.key && group == other.group;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ group.hashCode;
+}
+
+/// generated route for
 /// [GroupDishRatingsScreen]
 class GroupDishRatingsRoute extends PageRouteInfo<GroupDishRatingsRouteArgs> {
   GroupDishRatingsRoute({

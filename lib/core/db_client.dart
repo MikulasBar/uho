@@ -255,6 +255,34 @@ class DbClient {
     }
   }
 
+  static Future<void> addUsersToGroup({
+    required String groupId,
+    required List<String> userIds,
+  }) async {
+    try {
+      final uniqueUserIds = userIds.toSet().toList();
+      if (uniqueUserIds.isEmpty) {
+        return;
+      }
+
+      final memberships = uniqueUserIds
+          .map(
+            (userId) => {
+              'group_id': groupId,
+              'member_id': userId,
+            },
+          )
+          .toList();
+
+      await Supabase.instance.client
+          .from('group_memberships')
+          .insert(memberships);
+    } catch (e) {
+      print("Error adding users to group: $e");
+      rethrow;
+    }
+  }
+
   static Future<void> removeUserFromGroup({
     required String groupId,
     required String userId,
