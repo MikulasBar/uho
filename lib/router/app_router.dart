@@ -7,6 +7,8 @@ import 'package:uho/screens/dishes_screen/dishes_screen.dart';
 import 'package:uho/screens/canteens_screen/canteens_screen.dart';
 import 'package:uho/screens/groups_screen/groups_screen.dart';
 import 'package:uho/screens/group_screen/group_screen.dart';
+import 'package:uho/screens/group_members_screen/group_members_screen.dart';
+import 'package:uho/screens/group_dish_ratings_screen/group_dish_ratings_screen.dart';
 import 'package:uho/screens/new_group_screen/new_group_screen.dart';
 import 'package:uho/screens/friends_screen/friends_screen.dart';
 import 'package:uho/screens/dish_ratings_screen/dish_ratings_screen.dart';
@@ -24,6 +26,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: CanteensRoute.page),
     AutoRoute(page: GroupsRoute.page),
     AutoRoute(page: GroupRoute.page),
+    AutoRoute(page: GroupMembersRoute.page),
+    AutoRoute(page: GroupDishRatingsRoute.page),
     AutoRoute(page: NewGroupRoute.page),
     AutoRoute(page: FriendsRoute.page),
     AutoRoute(page: DishRatingsRoute.page),

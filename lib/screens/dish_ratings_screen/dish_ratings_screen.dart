@@ -26,7 +26,7 @@ class DishRatingsScreen extends StatelessWidget {
         onBack: () => context.router.pop(),
       ),
       body: FutureBuilder<List<DishRating>>(
-        future: DbClient.fetchDishRatings(dish.id),
+        future: DbClient.fetchDishRatings(dishId: dish.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

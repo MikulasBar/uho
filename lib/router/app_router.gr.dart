@@ -106,6 +106,100 @@ class FriendsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [GroupDishRatingsScreen]
+class GroupDishRatingsRoute extends PageRouteInfo<GroupDishRatingsRouteArgs> {
+  GroupDishRatingsRoute({
+    Key? key,
+    required Group group,
+    List<PageRouteInfo>? children,
+  }) : super(
+         GroupDishRatingsRoute.name,
+         args: GroupDishRatingsRouteArgs(key: key, group: group),
+         initialChildren: children,
+       );
+
+  static const String name = 'GroupDishRatingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<GroupDishRatingsRouteArgs>();
+      return GroupDishRatingsScreen(key: args.key, group: args.group);
+    },
+  );
+}
+
+class GroupDishRatingsRouteArgs {
+  const GroupDishRatingsRouteArgs({this.key, required this.group});
+
+  final Key? key;
+
+  final Group group;
+
+  @override
+  String toString() {
+    return 'GroupDishRatingsRouteArgs{key: $key, group: $group}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! GroupDishRatingsRouteArgs) return false;
+    return key == other.key && group == other.group;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ group.hashCode;
+}
+
+/// generated route for
+/// [GroupMembersScreen]
+class GroupMembersRoute extends PageRouteInfo<GroupMembersRouteArgs> {
+  GroupMembersRoute({
+    Key? key,
+    required Group group,
+    List<PageRouteInfo>? children,
+  }) : super(
+         GroupMembersRoute.name,
+         args: GroupMembersRouteArgs(key: key, group: group),
+         initialChildren: children,
+       );
+
+  static const String name = 'GroupMembersRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<GroupMembersRouteArgs>();
+      return GroupMembersScreen(key: args.key, group: args.group);
+    },
+  );
+}
+
+class GroupMembersRouteArgs {
+  const GroupMembersRouteArgs({this.key, required this.group});
+
+  final Key? key;
+
+  final Group group;
+
+  @override
+  String toString() {
+    return 'GroupMembersRouteArgs{key: $key, group: $group}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! GroupMembersRouteArgs) return false;
+    return key == other.key && group == other.group;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ group.hashCode;
+}
+
+/// generated route for
 /// [GroupScreen]
 class GroupRoute extends PageRouteInfo<GroupRouteArgs> {
   GroupRoute({Key? key, required Group group, List<PageRouteInfo>? children})

@@ -7,6 +7,7 @@ class UhoColor {
   static const Color highlight = Color.fromARGB(255, 113, 150, 216);
   static const Color text1 = Color.fromARGB(255, 255, 255, 255);
   static const Color text2 = Color.fromARGB(255, 223, 223, 223);
+  static const Color danger = Color.fromARGB(255, 190, 24, 24);
 }
 
 class UhoTheme {

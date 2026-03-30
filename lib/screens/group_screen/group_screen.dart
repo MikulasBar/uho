@@ -6,6 +6,7 @@ import 'package:uho/core/constants.dart';
 import 'package:uho/core/db_client.dart';
 import 'package:uho/models/group.dart';
 import 'package:uho/providers/auth_provider.dart';
+import 'package:uho/router/app_router.dart';
 import 'package:uho/widgets/header/header.dart';
 
 @RoutePage()
@@ -24,20 +25,38 @@ class GroupScreen extends StatefulWidget {
 class _GroupScreenState extends State<GroupScreen> {
   bool _isDeleting = false;
 
-  Future<void> _deleteGroup() async {
+  Future<void> _runDangerAction({required bool isOwner, required String? currentUserId}) async {
+    if (!isOwner && currentUserId == null) {
+      return;
+    }
+
     setState(() {
       _isDeleting = true;
     });
 
     try {
-      await DbClient.deleteGroup(groupId: widget.group.id);
+      if (isOwner) {
+        await DbClient.deleteGroup(groupId: widget.group.id);
+      } else {
+        await DbClient.leaveGroup(
+          groupId: widget.group.id,
+          userId: currentUserId!,
+        );
+      }
+
       if (mounted) {
         context.router.maybePop(true);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Chyba při mazání skupiny: $e')),
+          SnackBar(
+            content: Text(
+              isOwner
+                  ? 'Chyba při mazání skupiny: $e'
+                  : 'Chyba při opouštění skupiny: $e',
+            ),
+          ),
         );
       }
     } finally {
@@ -53,6 +72,7 @@ class _GroupScreenState extends State<GroupScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final isOwner = auth.user?.id == widget.group.ownerId;
+    final currentUserId = auth.user?.id;
 
     return Scaffold(
       appBar: UhoHeader.preferredSize(
@@ -69,16 +89,24 @@ class _GroupScreenState extends State<GroupScreen> {
                 borderRadius: BorderRadius.circular(UhoCornerRadius.medium),
               ),
               child: Column(
-                children: const [
+                children: [
                   ListTile(
+                    onTap: () {
+                      context.router.push(GroupMembersRoute(group: widget.group));
+                    },
                     title: Text(
                       'Členové',
                       style: TextStyle(color: UhoColor.text1),
                     ),
                     trailing: Icon(Icons.chevron_right, color: UhoColor.text2),
                   ),
-                  Divider(height: 1, color: UhoColor.text2),
+                  const Divider(height: 1, color: UhoColor.text2),
                   ListTile(
+                    onTap: () {
+                      context.router.push(
+                        GroupDishRatingsRoute(group: widget.group),
+                      );
+                    },
                     title: Text(
                       'Recenze jídel',
                       style: TextStyle(color: UhoColor.text1),
@@ -89,30 +117,34 @@ class _GroupScreenState extends State<GroupScreen> {
               ),
             ),
             const Spacer(),
-            if (isOwner)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isDeleting ? null : _deleteGroup,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(vertical: UhoPadding.medium),
-                  ),
-                  child: _isDeleting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation(Colors.white),
-                          ),
-                        )
-                      : const Text(
-                          'Smazat skupinu',
-                          style: TextStyle(color: Colors.white),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _isDeleting
+                    ? null
+                    : () => _runDangerAction(
+                          isOwner: isOwner,
+                          currentUserId: currentUserId,
                         ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: UhoColor.danger,
+                  padding: const EdgeInsets.symmetric(vertical: UhoPadding.medium),
                 ),
+                child: _isDeleting
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
+                        ),
+                      )
+                    : Text(
+                        isOwner ? 'Smazat skupinu' : 'Opustit skupinu',
+                        style: const TextStyle(color: Colors.white),
+                      ),
               ),
+            ),
           ],
         ),
       ),

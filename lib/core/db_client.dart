@@ -30,16 +30,34 @@ class DbClient {
     }
   }
 
-  static Future<List<DishRating>> fetchDishRatings(String dishId) async {
+  static Future<List<DishRating>> fetchDishRatings({
+    String? dishId,
+    String? groupId,
+  }) async {
     try {
-      // Select ratings for this dish, joined with profiles to get username
-      final result = await Supabase.instance.client
+      final selectWithGroup = """
+        *,
+        user:profiles(username, ratings_count),
+        relation:dish_rating_group_relations!inner(group_id)
+      """;
+      final selectBasic = """
+        *,
+        user:profiles(username, ratings_count)
+      """;
+
+      var query = Supabase.instance.client
           .from('dish_ratings')
-          .select("""
-            *,
-            user:profiles(username, ratings_count)
-          """)
-          .eq('dish_id', dishId);
+          .select(groupId != null ? selectWithGroup : selectBasic);
+
+      if (dishId != null) {
+        query = query.eq('dish_id', dishId);
+      }
+
+      if (groupId != null) {
+        query = query.eq('relation.group_id', groupId);
+      }
+
+      final result = await query;
 
       final ratings = (result as List).map((json) {
         final rating = DishRating.fromJson({
@@ -124,6 +142,44 @@ class DbClient {
       return users;
     } catch (e) {
       print("Error fetching users: $e");
+      return [];
+    }
+  }
+
+  static Future<List<Profile>> fetchGroupMembers(
+    String groupId, {
+    List<String> includeUserIds = const [],
+  }) async {
+    try {
+      final memberships = await Supabase.instance.client
+          .from('group_memberships')
+          .select('member_id')
+          .eq('group_id', groupId);
+
+      final memberIds = (memberships as List)
+          .map((json) => json['member_id'] as String)
+          .toSet()
+          .toList();
+
+      memberIds.addAll(includeUserIds.where((id) => id.isNotEmpty));
+
+      if (memberIds.isEmpty) {
+        return [];
+      }
+
+      final result = await Supabase.instance.client
+          .from('profiles')
+          .select('user_id, username, ratings_count, description')
+          .inFilter('user_id', memberIds);
+
+      final users = (result as List).map((json) {
+        return Profile.fromJson(json);
+      }).toList()
+        ..sort((a, b) => a.username.compareTo(b.username));
+
+      return users;
+    } catch (e) {
+      print("Error fetching group members: $e");
       return [];
     }
   }
@@ -242,37 +298,6 @@ class DbClient {
   }
 
   static Future<List<DishRating>> fetchGroupDishRatings(String groupId) async {
-    try {
-      final result = await Supabase.instance.client
-          .from('group_dish_ratings')
-          .select("""
-            dish_rating:dish_ratings(
-              overall_rating,
-              taste_rating,
-              portion_size_rating,
-              description,
-              user:profiles(username, ratings_count)
-            )
-          """)
-          .eq('group_id', groupId);
-
-      final ratings = (result as List).map((json) {
-        final dishRating = json['dish_rating'] as Map<String, dynamic>?;
-        final rating = DishRating.fromJson({
-          'user_name': dishRating?['user']?['username'] ?? 'Unknown',
-          'user_rating_count': dishRating?['user']?['ratings_count'],
-          'overall_rating': dishRating?['overall_rating'],
-          'taste_rating': dishRating?['taste_rating'],
-          'portion_size_rating': dishRating?['portion_size_rating'],
-          'description': dishRating?['description'] ?? '',
-        });
-        return rating;
-      }).toList();
-
-      return ratings;
-    } catch (e) {
-      print("Error fetching group dish ratings: $e");
-      return [];
-    }
+    return fetchDishRatings(groupId: groupId);
   }
 }
