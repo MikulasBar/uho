@@ -78,7 +78,6 @@ class DbClient {
         'taste_rating': tasteRating,
         'portion_size_rating': portionSizeRating,
         'description': description,
-        // 'created_at': DateTime.now().toIso8601String(),
       });
     } catch (e) {
       print("Error inserting dish rating: $e");

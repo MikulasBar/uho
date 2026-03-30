@@ -1,10 +1,11 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:uho/core/constants.dart';
 import 'package:uho/core/db_client.dart';
 import 'package:uho/models/dish.dart';
 import 'package:uho/models/dish_rating.dart';
+import 'package:uho/providers/auth_provider.dart';
 import 'package:uho/router/app_router.dart';
 import 'package:uho/widgets/bottom_bar/bottom_bar.dart';
 import 'package:uho/widgets/dish_rating_card/dish_rating_card.dart';
@@ -15,11 +16,15 @@ class DishRatingsScreen extends StatelessWidget {
   final Dish dish;
 
   const DishRatingsScreen({super.key, required this.dish});
-  
+
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
     return Scaffold(
-      appBar: UhoHeader.preferredSize(title: dish.name, onBack: () => context.router.pop()),
+      appBar: UhoHeader.preferredSize(
+        title: dish.name,
+        onBack: () => context.router.pop(),
+      ),
       body: FutureBuilder<List<DishRating>>(
         future: DbClient.fetchDishRatings(dish.id),
         builder: (context, snapshot) {
@@ -28,7 +33,12 @@ class DishRatingsScreen extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Žádné hodnocení není k dispozici.', style: TextStyle(fontSize: UhoFontSize.medium)));
+            return const Center(
+              child: Text(
+                'Žádné hodnocení není k dispozici.',
+                style: TextStyle(fontSize: UhoFontSize.medium),
+              ),
+            );
           } else {
             final ratings = snapshot.data!;
             return ListView.builder(
@@ -42,15 +52,17 @@ class DishRatingsScreen extends StatelessWidget {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        context.router.push(
-          NewDishRatingRoute(dish: dish), // your route to new screen
-        );
-      },
-      backgroundColor: UhoColor.card,
-      child: const Icon(Icons.add, color: UhoColor.highlight),
-    ),
+      floatingActionButton: auth.isLoggedIn
+          ? FloatingActionButton(
+              onPressed: () {
+                context.router.push(
+                  NewDishRatingRoute(dish: dish), // your route to new screen
+                );
+              },
+              backgroundColor: UhoColor.card,
+              child: const Icon(Icons.add, color: UhoColor.highlight),
+            )
+          : null,
       bottomNavigationBar: UhoBottomBar(),
     );
   }
