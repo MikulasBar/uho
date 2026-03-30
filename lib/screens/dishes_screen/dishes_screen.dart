@@ -15,7 +15,7 @@ class DishesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UhoHeader.preferredSize(title: "Dishes"),
+      appBar: UhoHeader.preferredSize(title: "Jídla"),
       body: FutureBuilder<List<(Dish, DishGlobalRating)>>(
         future: DbClient.fetchGlobalRatings(limit: 10),
         builder: (context, snapshot) {

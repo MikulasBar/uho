@@ -9,8 +9,8 @@ class DbClient {
   }) async {
     try {
       final result = await Supabase.instance.client
-          .from("dish")
-          .select("*, rating:dish_global_rating(*)")
+          .from("dishes")
+          .select("*, rating:dish_global_ratings(*)")
           .limit(limit);
 
       final ratings = result.map((json) {
@@ -32,7 +32,7 @@ class DbClient {
     try {
       // Select ratings for this dish, joined with profiles to get username
       final result = await Supabase.instance.client
-          .from('dish_rating')
+          .from('dish_ratings')
           .select("""
             *,
             user:profiles(username, ratings_count)
@@ -71,7 +71,7 @@ class DbClient {
         throw Exception("User not logged in");
       }
 
-      await Supabase.instance.client.from('dish_rating').insert({
+      await Supabase.instance.client.from('dish_ratings').insert({
         'dish_id': dishId,
         'user_id': user.id,
         'overall_rating': overallRating,
